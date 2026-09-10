@@ -22,6 +22,9 @@
     .journal{font-size:13px;font-weight:800;color:var(--accent);margin-bottom:8px}.paper h3{margin:0 0 10px;font-size:19px;line-height:1.45}.meta{color:var(--muted);font-size:13px;margin-bottom:12px}
     .tags{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}.tag{background:var(--soft);color:#4159b8;border-radius:999px;padding:5px 9px;font-size:12px;font-weight:700}
     .paper p{margin:8px 0;color:#46536c;font-size:14px;line-height:1.65}.label{font-weight:800;color:#26334d}.note{text-align:center;color:var(--muted);margin-top:26px;font-size:13px}
+    .institution-box{margin:12px 0 14px;padding:11px 12px;border-left:3px solid var(--accent);background:#f8faff;border-radius:8px}
+    .institution-title{font-size:13px;font-weight:800;color:#26334d;margin-bottom:6px}
+    .institution-item{font-size:13px;line-height:1.55;color:#59657b;margin:3px 0}
     .pubmed{display:inline-block;margin-top:10px;color:var(--accent);font-weight:700;text-decoration:none}
     @media(max-width:800px){.stats{grid-template-columns:repeat(2,1fr)}.papers{grid-template-columns:1fr}h1{font-size:28px}}
   </style>
@@ -67,12 +70,22 @@
         else other++;
         const article=document.createElement('article');
         article.className='paper';
+
+        const institutions = p.china_affiliations || [];
+        const institutionBlock = institutions.length ? `
+          <div class="institution-box">
+            <div class="institution-title">中国机构</div>
+            ${institutions.map(aff => `<div class="institution-item">${aff}</div>`).join('')}
+          </div>` : '';
+
         const pubmedLink = p.pubmed_url ? `<a class="pubmed" href="${p.pubmed_url}" target="_blank" rel="noopener">在 PubMed 查看 →</a>` : '';
+
         article.innerHTML=`
           <div class="journal">${p.journal || ''}</div>
           <h3>${p.title || ''}</h3>
           <div class="meta">${p.date || ''}${p.disease ? ' · ' + p.disease : ''}${p.pmid ? ' · PMID ' + p.pmid : ''}</div>
           <div class="tags">${tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+          ${institutionBlock}
           ${p.question ? `<p><span class="label">研究问题：</span>${p.question}</p>` : ''}
           ${p.methods ? `<p><span class="label">方法：</span>${p.methods}</p>` : ''}
           ${p.finding ? `<p><span class="label">主要结果：</span>${p.finding}</p>` : ''}
