@@ -1,25 +1,65 @@
 {
-  "month": "2026 年 8 月",
+  "month": "PubMed 最新示例",
   "papers": [
     {
       "journal": "Radiology",
-      "title": "Multiphase DCE-MRI for treatment-response prediction in breast cancer",
-      "date": "2026-08-12",
-      "disease": "Breast Cancer",
-      "tags": ["MRI", "DCE-MRI", "Radiomics"],
-      "question": "多时相 DCE-MRI 是否能够更好地识别治疗低应答患者？",
-      "methods": "基于多时相动态增强信息建立影像特征模型。",
-      "finding": "这是演示数据，后面会由真实 PubMed 文献自动替换。"
+      "title": "Deceptive Eloquence in AI-assisted Thoracic Radiology.",
+      "date": "2026",
+      "disease": "",
+      "tags": [],
+      "question": "",
+      "methods": "",
+      "finding": "",
+      "pmid": "42708858",
+      "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/42708858/"
     },
     {
-      "journal": "European Radiology",
-      "title": "Deep learning analysis of longitudinal chest CT for pulmonary nodule risk",
-      "date": "2026-08-21",
-      "disease": "Lung",
-      "tags": ["CT", "Deep Learning", "Longitudinal"],
-      "question": "连续 CT 的时间变化能否提高肺结节风险判断？",
-      "methods": "融合多时点 CT 和深度学习进行纵向预测。",
-      "finding": "这是演示数据，后面会由真实 PubMed 文献自动替换。"
+      "journal": "Radiology",
+      "title": "Falling Fruit Sign: Pelvic Splenosis Supplied by the Celiac Trunk.",
+      "date": "2026",
+      "disease": "",
+      "tags": [],
+      "question": "",
+      "methods": "",
+      "finding": "",
+      "pmid": "42708857",
+      "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/42708857/"
+    },
+    {
+      "journal": "Radiology",
+      "title": "Sharpening the PET Amyloid Signal with MRI.",
+      "date": "2026",
+      "disease": "",
+      "tags": [],
+      "question": "",
+      "methods": "",
+      "finding": "",
+      "pmid": "42708856",
+      "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/42708856/"
+    },
+    {
+      "journal": "Radiology",
+      "title": "Bringing Inflammation's Microvasculature into View: Super-Resolution US in Crohn Disease Activity-Early Career Perspective.",
+      "date": "2026",
+      "disease": "",
+      "tags": [],
+      "question": "",
+      "methods": "",
+      "finding": "",
+      "pmid": "42708855",
+      "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/42708855/"
+    },
+    {
+      "journal": "Radiology",
+      "title": "Ketamine Plus Midazolam versus Fentanyl Plus Midazolam for Sedation and Analgesia during Image-guided Procedures in Interventional Radiology: Randomized Clinical Trial.",
+      "date": "2026",
+      "disease": "",
+      "tags": [],
+      "question": "",
+      "methods": "Background Opioid-benzodiazepine regimens remain common for radiologist-administered procedural sedation despite respiratory and analgesic effectiveness concerns. Purpose To compare intraprocedural pain and patient-reported experience between ketamine/midazolam and fentanyl/midazolam during image-guided procedural sedation. Materials and Methods This randomized clinical trial was conducted at a single academic center between June 2025 and February 2026. Adults undergoing image-guided lung or bone biopsy or abscess drainage were randomized to fentanyl/midazolam or ketamine/midazolam administere",
+      "finding": "",
+      "pmid": "42708854",
+      "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/42708854/"
     }
   ]
 }
