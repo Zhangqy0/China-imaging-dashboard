@@ -22,6 +22,7 @@
     .journal{font-size:13px;font-weight:800;color:var(--accent);margin-bottom:8px}.paper h3{margin:0 0 10px;font-size:19px;line-height:1.45}.meta{color:var(--muted);font-size:13px;margin-bottom:12px}
     .tags{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}.tag{background:var(--soft);color:#4159b8;border-radius:999px;padding:5px 9px;font-size:12px;font-weight:700}
     .paper p{margin:8px 0;color:#46536c;font-size:14px;line-height:1.65}.label{font-weight:800;color:#26334d}.note{text-align:center;color:var(--muted);margin-top:26px;font-size:13px}
+    .pubmed{display:inline-block;margin-top:10px;color:var(--accent);font-weight:700;text-decoration:none}
     @media(max-width:800px){.stats{grid-template-columns:repeat(2,1fr)}.papers{grid-template-columns:1fr}h1{font-size:28px}}
   </style>
 </head>
@@ -29,11 +30,11 @@
 <main class="wrap">
   <section class="hero">
     <div class="top">
-      <div><div class="eyebrow">Imaging Research Monthly</div><h1>月度影像学科研看板</h1><p class="subtitle">当前页面已经开始从独立数据文件读取论文。</p></div>
+      <div><div class="eyebrow">Imaging Research Monthly</div><h1>月度影像学科研看板</h1><p class="subtitle">当前页面从 PubMed 数据文件读取论文。</p></div>
       <div class="month" id="month">加载中...</div>
     </div>
     <div class="stats">
-      <div class="stat"><strong id="total">0</strong><span>本月论文</span></div>
+      <div class="stat"><strong id="total">0</strong><span>论文</span></div>
       <div class="stat"><strong id="mri">0</strong><span>MRI</span></div>
       <div class="stat"><strong id="ct">0</strong><span>CT</span></div>
       <div class="stat"><strong id="other">0</strong><span>其他</span></div>
@@ -41,19 +42,24 @@
   </section>
 
   <section class="section">
-    <h2>本月精选论文</h2>
+    <h2>最新论文</h2>
     <div class="papers" id="papers"></div>
   </section>
-  <div class="note">当前仍为演示数据。下一步我们会接入真实 PubMed 文献。</div>
+  <div class="note">数据来自 PubMed。当前为功能测试版。</div>
 </main>
 <script>
-  fetch('data/latest.json')
-    .then(r => r.json())
+  const dataUrl = 'data/latest.json?v=' + Date.now();
+  fetch(dataUrl, { cache: 'no-store' })
+    .then(r => {
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.json();
+    })
     .then(data => {
       document.getElementById('month').textContent = data.month;
       document.getElementById('total').textContent = data.papers.length;
       let mri=0, ct=0, other=0;
       const box=document.getElementById('papers');
+      box.innerHTML='';
       data.papers.forEach(p=>{
         const tags=p.tags||[];
         if(tags.includes('MRI')) mri++;
@@ -61,22 +67,25 @@
         else other++;
         const article=document.createElement('article');
         article.className='paper';
+        const pubmedLink = p.pubmed_url ? `<a class="pubmed" href="${p.pubmed_url}" target="_blank" rel="noopener">在 PubMed 查看 →</a>` : '';
         article.innerHTML=`
-          <div class="journal">${p.journal}</div>
-          <h3>${p.title}</h3>
-          <div class="meta">${p.date} · ${p.disease}</div>
+          <div class="journal">${p.journal || ''}</div>
+          <h3>${p.title || ''}</h3>
+          <div class="meta">${p.date || ''}${p.disease ? ' · ' + p.disease : ''}${p.pmid ? ' · PMID ' + p.pmid : ''}</div>
           <div class="tags">${tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>
-          <p><span class="label">研究问题：</span>${p.question}</p>
-          <p><span class="label">方法：</span>${p.methods}</p>
-          <p><span class="label">主要结果：</span>${p.finding}</p>`;
+          ${p.question ? `<p><span class="label">研究问题：</span>${p.question}</p>` : ''}
+          ${p.methods ? `<p><span class="label">方法：</span>${p.methods}</p>` : ''}
+          ${p.finding ? `<p><span class="label">主要结果：</span>${p.finding}</p>` : ''}
+          ${pubmedLink}`;
         box.appendChild(article);
       });
       document.getElementById('mri').textContent=mri;
       document.getElementById('ct').textContent=ct;
       document.getElementById('other').textContent=other;
     })
-    .catch(()=>{
+    .catch(err=>{
       document.getElementById('month').textContent='数据加载失败';
+      document.getElementById('papers').innerHTML='<article class="paper">无法读取最新数据：'+err.message+'</article>';
     });
 </script>
 </body>
