@@ -1,4 +1,7 @@
 import json
+import os
+import re
+import time
 import urllib.parse
 import urllib.request
 import xml.etree.ElementTree as ET
@@ -10,7 +13,9 @@ MONTH = 8
 RETMAX = 200
 OUT = Path("data/latest.json")
 
-# 这些 PubMed 文章类型通常不是原创研究，先排除。
+OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", "").strip()
+OPENAI_MODEL = os.environ.get("OPENAI_MODEL", "gpt-5.6-luna").strip() or "gpt-5.6-luna"
+
 NON_ORIGINAL_TYPES = {
     "Editorial",
     "Comment",
@@ -29,7 +34,6 @@ NON_ORIGINAL_TYPES = {
     "Retracted Publication",
 }
 
-# 第一版“中国机构”判断：只根据 PubMed 作者单位地址，不判断作者国籍。
 CHINA_AFFILIATION_KEYWORDS = (
     "china",
     "hong kong",
@@ -86,7 +90,6 @@ def publication_date(record):
 def extract_authors_and_affiliations(art):
     authors = []
     affiliations = []
-
     for author in art.findall("AuthorList/Author"):
         collective = text(author, "CollectiveName")
         if collective:
@@ -102,7 +105,6 @@ def extract_authors_and_affiliations(art):
             aff = "".join(aff_node.itertext()).strip()
             if aff and aff not in affiliations:
                 affiliations.append(aff)
-
     return authors, affiliations
 
 
@@ -111,6 +113,102 @@ def is_china_affiliation(affiliation):
     return any(keyword in a for keyword in CHINA_AFFILIATION_KEYWORDS)
 
 
+def load_summary_cache():
+    if not OUT.exists():
+        return {}
+    try:
+        old = json.loads(OUT.read_text(encoding="utf-8"))
+    except Exception:
+        return {}
+
+    cache = {}
+    for paper in old.get("papers", []):
+        pmid = str(paper.get("pmid", "")).strip()
+        if not pmid:
+            continue
+        if all(str(paper.get(k, "")).strip() for k in ("title_zh", "question", "methods", "finding")):
+            cache[pmid] = {
+                "title_zh": paper.get("title_zh", ""),
+                "question": paper.get("question", ""),
+                "methods": paper.get("methods", ""),
+                "finding": paper.get("finding", ""),
+            }
+    return cache
+
+
+def extract_response_text(response_json):
+    direct = response_json.get("output_text")
+    if isinstance(direct, str) and direct.strip():
+        return direct.strip()
+
+    chunks = []
+    for item in response_json.get("output", []):
+        for content in item.get("content", []):
+            if content.get("type") == "output_text" and content.get("text"):
+                chunks.append(content["text"])
+    return "\n".join(chunks).strip()
+
+
+def parse_json_object(raw_text):
+    raw_text = raw_text.strip()
+    raw_text = re.sub(r"^```(?:json)?\s*", "", raw_text, flags=re.I)
+    raw_text = re.sub(r"\s*```$", "", raw_text)
+    try:
+        return json.loads(raw_text)
+    except json.JSONDecodeError:
+        match = re.search(r"\{.*\}", raw_text, flags=re.S)
+        if not match:
+            raise
+        return json.loads(match.group(0))
+
+
+def ai_chinese_summary(title, abstract):
+    prompt = f"""你是一名医学影像学科研文献编辑。请严格依据下面的英文论文题目和PubMed摘要，生成中文科研月报内容。不得补充摘要中没有的信息，不得臆测结果。
+
+请只输出一个合法JSON对象，不要使用Markdown，不要输出任何解释。字段必须严格为：
+{{
+  "title_zh": "专业、忠实、自然的中文论文题目",
+  "question": "用1句话概括研究问题",
+  "methods": "用1到2句话概括研究设计、研究对象/样本、影像技术与关键分析方法",
+  "finding": "用1到2句话概括最重要结果和结论；摘要有关键数字、AUC、敏感度等时优先保留"
+}}
+
+英文题目：
+{title}
+
+PubMed摘要：
+{abstract}
+"""
+
+    payload = {
+        "model": OPENAI_MODEL,
+        "input": prompt,
+        "max_output_tokens": 900,
+    }
+
+    req = urllib.request.Request(
+        "https://api.openai.com/v1/responses",
+        data=json.dumps(payload, ensure_ascii=False).encode("utf-8"),
+        headers={
+            "Authorization": f"Bearer {OPENAI_API_KEY}",
+            "Content-Type": "application/json",
+        },
+        method="POST",
+    )
+
+    with urllib.request.urlopen(req, timeout=90) as r:
+        response_json = json.loads(r.read().decode("utf-8"))
+
+    result = parse_json_object(extract_response_text(response_json))
+    return {
+        "title_zh": str(result.get("title_zh", "")).strip(),
+        "question": str(result.get("question", "")).strip(),
+        "methods": str(result.get("methods", "")).strip(),
+        "finding": str(result.get("finding", "")).strip(),
+    }
+
+
+summary_cache = load_summary_cache()
 start_date = f"{YEAR}/{MONTH:02d}/01"
 end_date = f"{YEAR}/{MONTH:02d}/31"
 term = f'"{JOURNAL}"[jour] AND {start_date}:{end_date}[dp]'
@@ -144,6 +242,9 @@ root = get_xml(fetch_url)
 papers = []
 excluded_non_original = []
 excluded_non_china = []
+
+print(f"AI Chinese summaries enabled: {'yes' if OPENAI_API_KEY else 'no'}")
+print(f"AI model: {OPENAI_MODEL}")
 
 for record in root.findall(".//PubmedArticle"):
     citation = record.find("MedlineCitation")
@@ -180,21 +281,38 @@ for record in root.findall(".//PubmedArticle"):
 
     authors, affiliations = extract_authors_and_affiliations(art)
     china_affiliations = [aff for aff in affiliations if is_china_affiliation(aff)]
-
-    # 只保留至少有一个中国机构作者单位的论文。
     if not china_affiliations:
         excluded_non_china.append({"pmid": pmid, "title": title})
         continue
 
+    summary = summary_cache.get(pmid, {
+        "title_zh": "",
+        "question": "",
+        "methods": "",
+        "finding": "",
+    })
+
+    if pmid in summary_cache:
+        print(f"Using cached Chinese summary for PMID {pmid}")
+    elif OPENAI_API_KEY:
+        try:
+            print(f"AI summarizing PMID {pmid}...")
+            summary = ai_chinese_summary(title, abstract)
+            time.sleep(0.2)
+        except Exception as e:
+            print(f"WARNING: AI summary failed for PMID {pmid}: {type(e).__name__}: {e}")
+
     papers.append({
         "journal": journal,
         "title": title,
+        "title_zh": summary["title_zh"],
         "date": date,
         "disease": "",
         "tags": [],
-        "question": "",
-        "methods": abstract[:600],
-        "finding": "",
+        "question": summary["question"],
+        "methods": summary["methods"],
+        "finding": summary["finding"],
+        "abstract": abstract,
         "pmid": pmid,
         "authors": authors,
         "china_affiliations": china_affiliations,
@@ -206,6 +324,8 @@ OUT.parent.mkdir(parents=True, exist_ok=True)
 OUT.write_text(
     json.dumps({
         "month": f"{YEAR} 年 {MONTH} 月 · {JOURNAL} · 中国机构原创研究",
+        "ai_summary": bool(OPENAI_API_KEY),
+        "ai_model": OPENAI_MODEL if OPENAI_API_KEY else "",
         "papers": papers
     }, ensure_ascii=False, indent=2),
     encoding="utf-8"
@@ -216,8 +336,4 @@ print(f"PubMed records found: {len(pmids)}")
 print(f"Excluded as non-original/no abstract: {len(excluded_non_original)}")
 print(f"Excluded because no China affiliation: {len(excluded_non_china)}")
 print(f"China-affiliated original studies kept: {len(papers)}")
-for p in papers:
-    print(f"KEPT PMID {p['pmid']}: {p['title']}")
-    for aff in p['china_affiliations']:
-        print(f"  China affiliation: {aff}")
 print(f"Saved {len(papers)} papers to {OUT}")
