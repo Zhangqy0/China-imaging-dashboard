@@ -51,6 +51,38 @@
   <div class="note">数据来自 PubMed。当前为功能测试版。</div>
 </main>
 <script>
+  const institutionMap = [
+    ['Taizhou Hospital of Zhejiang Province Affiliated to Wenzhou Medical University','浙江省台州医院'],
+    ['Dalian Medical University','大连医科大学'],
+    ['Enze Hospital','台州恩泽医院'],
+    ['Cancer Hospital, Chinese Academy of Medical Sciences and Peking Union Medical College','中国医学科学院肿瘤医院'],
+    ["Jingjiang People's Hospital",'靖江市人民医院'],
+    ['The Second Affiliated Hospital, Jiaxing University','嘉兴大学附属第二医院'],
+    ['Queen Elizabeth Hospital','香港伊利沙伯医院'],
+    ['The First Affiliated Hospital of Xiamen University','厦门大学附属第一医院'],
+    ['Fujian Cancer Hospital','福建省肿瘤医院'],
+    ['Tianjin Medical University Cancer Institute and Hospital','天津医科大学肿瘤医院'],
+    ['The Affiliated Cancer Hospital of Zhengzhou University & Henan Cancer Hospital','郑州大学附属肿瘤医院（河南省肿瘤医院）'],
+    ['Shandong Cancer Hospital and Institute','山东第一医科大学附属肿瘤医院（山东省肿瘤医院）'],
+    ['Peking University Cancer Hospital and Institute','北京大学肿瘤医院'],
+    ['Shougang Hospital, Peking University','北京大学首钢医院'],
+    ['Guangxi Medical University Cancer Hospital','广西医科大学附属肿瘤医院'],
+    ['Ruijin Hospital, Shanghai Jiao Tong University School of Medicine','上海交通大学医学院附属瑞金医院'],
+    ['Shanghai Jiao Tong University School of Medicine','上海交通大学医学院']
+  ];
+
+  function getChineseInstitutions(affiliations){
+    const names=[];
+    (affiliations || []).forEach(aff=>{
+      for(const [english, chinese] of institutionMap){
+        if(aff.toLowerCase().includes(english.toLowerCase()) && !names.includes(chinese)){
+          names.push(chinese);
+        }
+      }
+    });
+    return names;
+  }
+
   const dataUrl = 'data/latest.json?v=' + Date.now();
   fetch(dataUrl, { cache: 'no-store' })
     .then(r => {
@@ -71,11 +103,11 @@
         const article=document.createElement('article');
         article.className='paper';
 
-        const institutions = p.china_affiliations || [];
+        const institutions = getChineseInstitutions(p.china_affiliations || []);
         const institutionBlock = institutions.length ? `
           <div class="institution-box">
             <div class="institution-title">中国机构</div>
-            ${institutions.map(aff => `<div class="institution-item">${aff}</div>`).join('')}
+            ${institutions.map(name => `<div class="institution-item">${name}</div>`).join('')}
           </div>` : '';
 
         const pubmedLink = p.pubmed_url ? `<a class="pubmed" href="${p.pubmed_url}" target="_blank" rel="noopener">在 PubMed 查看 →</a>` : '';
