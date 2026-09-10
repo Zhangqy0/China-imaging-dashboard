@@ -5,102 +5,79 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>月度影像学科研看板</title>
   <style>
-    :root{--bg:#f5f7fb;--card:#ffffff;--text:#172033;--muted:#6f7a90;--line:#e7ebf2;--accent:#3457d5;--accent-soft:#eef2ff;}
+    :root{--bg:#f5f7fb;--card:#fff;--text:#172033;--muted:#6f7a90;--line:#e7ebf2;--accent:#3457d5;--soft:#eef2ff}
     *{box-sizing:border-box}
     body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",Arial,sans-serif;background:var(--bg);color:var(--text)}
-    .wrap{max-width:1180px;margin:0 auto;padding:32px 20px 56px}
-    .hero{background:linear-gradient(135deg,#ffffff 0%,#eef3ff 100%);border:1px solid var(--line);border-radius:22px;padding:30px;box-shadow:0 10px 30px rgba(32,54,105,.07)}
+    .wrap{max-width:1180px;margin:auto;padding:32px 20px 56px}
+    .hero{background:linear-gradient(135deg,#fff 0%,#eef3ff 100%);border:1px solid var(--line);border-radius:22px;padding:30px;box-shadow:0 10px 30px rgba(32,54,105,.07)}
+    .top{display:flex;justify-content:space-between;gap:20px;align-items:flex-end;flex-wrap:wrap}
     .eyebrow{font-size:13px;font-weight:700;letter-spacing:.12em;color:var(--accent);text-transform:uppercase}
-    h1{margin:8px 0 10px;font-size:34px;line-height:1.2}
-    .subtitle{margin:0;color:var(--muted);font-size:16px}
-    .toprow{display:flex;justify-content:space-between;gap:20px;align-items:flex-end;flex-wrap:wrap}
+    h1{margin:8px 0 10px;font-size:34px}.subtitle{margin:0;color:var(--muted)}
     .month{background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 14px;font-weight:700}
     .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:22px}
-    .stat{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px}
-    .stat strong{display:block;font-size:28px;margin-bottom:4px}.stat span{color:var(--muted);font-size:14px}
-    .section{margin-top:26px}
-    .section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
-    .section-head h2{margin:0;font-size:22px}
-    .filters{display:flex;gap:8px;flex-wrap:wrap}
-    .chip{border:1px solid var(--line);background:#fff;color:#42506a;padding:8px 12px;border-radius:999px;font-size:14px;cursor:pointer}
-    .chip.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+    .stat{background:#fff;border:1px solid var(--line);border-radius:16px;padding:18px}.stat strong{display:block;font-size:28px}.stat span{color:var(--muted);font-size:14px}
+    .section{margin-top:26px}.section h2{font-size:22px}
     .papers{display:grid;grid-template-columns:1fr 1fr;gap:16px}
     .paper{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:0 8px 20px rgba(32,54,105,.04)}
-    .journal{font-size:13px;font-weight:800;color:var(--accent);margin-bottom:8px}
-    .paper h3{margin:0 0 10px;font-size:19px;line-height:1.45}
-    .meta{color:var(--muted);font-size:13px;margin-bottom:12px}
-    .tags{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}.tag{background:var(--accent-soft);color:#4159b8;border-radius:999px;padding:5px 9px;font-size:12px;font-weight:700}
-    .paper p{margin:8px 0;color:#46536c;font-size:14px;line-height:1.65}
-    .label{font-weight:800;color:#26334d}
-    .note{margin-top:26px;color:var(--muted);font-size:13px;text-align:center}
-    @media (max-width:800px){.stats{grid-template-columns:repeat(2,1fr)}.papers{grid-template-columns:1fr}h1{font-size:28px}}
+    .journal{font-size:13px;font-weight:800;color:var(--accent);margin-bottom:8px}.paper h3{margin:0 0 10px;font-size:19px;line-height:1.45}.meta{color:var(--muted);font-size:13px;margin-bottom:12px}
+    .tags{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}.tag{background:var(--soft);color:#4159b8;border-radius:999px;padding:5px 9px;font-size:12px;font-weight:700}
+    .paper p{margin:8px 0;color:#46536c;font-size:14px;line-height:1.65}.label{font-weight:800;color:#26334d}.note{text-align:center;color:var(--muted);margin-top:26px;font-size:13px}
+    @media(max-width:800px){.stats{grid-template-columns:repeat(2,1fr)}.papers{grid-template-columns:1fr}h1{font-size:28px}}
   </style>
 </head>
 <body>
-  <main class="wrap">
-    <section class="hero">
-      <div class="toprow">
-        <div>
-          <div class="eyebrow">Imaging Research Monthly</div>
-          <h1>月度影像学科研看板</h1>
-          <p class="subtitle">先做一个能看的版本，后面再接 PubMed 自动抓取和 AI 总结。</p>
-        </div>
-        <div class="month">2026 年 8 月</div>
-      </div>
+<main class="wrap">
+  <section class="hero">
+    <div class="top">
+      <div><div class="eyebrow">Imaging Research Monthly</div><h1>月度影像学科研看板</h1><p class="subtitle">当前页面已经开始从独立数据文件读取论文。</p></div>
+      <div class="month" id="month">加载中...</div>
+    </div>
+    <div class="stats">
+      <div class="stat"><strong id="total">0</strong><span>本月论文</span></div>
+      <div class="stat"><strong id="mri">0</strong><span>MRI</span></div>
+      <div class="stat"><strong id="ct">0</strong><span>CT</span></div>
+      <div class="stat"><strong id="other">0</strong><span>其他</span></div>
+    </div>
+  </section>
 
-      <div class="stats">
-        <div class="stat"><strong>24</strong><span>本月论文</span></div>
-        <div class="stat"><strong>11</strong><span>MRI</span></div>
-        <div class="stat"><strong>8</strong><span>CT</span></div>
-        <div class="stat"><strong>5</strong><span>PET / US</span></div>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="section-head">
-        <h2>本月精选论文</h2>
-        <div class="filters">
-          <button class="chip active">全部</button>
-          <button class="chip">MRI</button>
-          <button class="chip">CT</button>
-          <button class="chip">PET</button>
-          <button class="chip">AI</button>
-        </div>
-      </div>
-
-      <div class="papers">
-        <article class="paper">
-          <div class="journal">Radiology · 示例</div>
-          <h3>Multiphase DCE-MRI for treatment-response prediction in breast cancer</h3>
-          <div class="meta">2026-08-12 · Breast Cancer</div>
-          <div class="tags"><span class="tag">MRI</span><span class="tag">DCE-MRI</span><span class="tag">Radiomics</span></div>
-          <p><span class="label">研究问题：</span>多时相 DCE-MRI 是否能够更好地识别治疗低应答患者？</p>
-          <p><span class="label">方法：</span>基于多时相动态增强信息建立影像特征模型。</p>
-          <p><span class="label">主要结果：</span>这里以后由真实 PubMed 文献和 AI 摘要自动替换。</p>
-        </article>
-
-        <article class="paper">
-          <div class="journal">European Radiology · 示例</div>
-          <h3>Deep learning analysis of longitudinal chest CT for pulmonary nodule risk</h3>
-          <div class="meta">2026-08-21 · Lung</div>
-          <div class="tags"><span class="tag">CT</span><span class="tag">Deep Learning</span><span class="tag">Longitudinal</span></div>
-          <p><span class="label">研究问题：</span>连续 CT 的时间变化能否提高肺结节风险判断？</p>
-          <p><span class="label">方法：</span>融合多时点 CT 和深度学习进行纵向预测。</p>
-          <p><span class="label">科研启示：</span>后续可重点关注多时点影像与临床决策的结合。</p>
-        </article>
-      </div>
-    </section>
-
-    <div class="note">当前页面全部为演示数据。下一步我们再把真实论文数据接进来。</div>
-  </main>
-
-  <script>
-    document.querySelectorAll('.chip').forEach(btn=>{
-      btn.addEventListener('click',()=>{
-        document.querySelectorAll('.chip').forEach(x=>x.classList.remove('active'));
-        btn.classList.add('active');
+  <section class="section">
+    <h2>本月精选论文</h2>
+    <div class="papers" id="papers"></div>
+  </section>
+  <div class="note">当前仍为演示数据。下一步我们会接入真实 PubMed 文献。</div>
+</main>
+<script>
+  fetch('data/latest.json')
+    .then(r => r.json())
+    .then(data => {
+      document.getElementById('month').textContent = data.month;
+      document.getElementById('total').textContent = data.papers.length;
+      let mri=0, ct=0, other=0;
+      const box=document.getElementById('papers');
+      data.papers.forEach(p=>{
+        const tags=p.tags||[];
+        if(tags.includes('MRI')) mri++;
+        else if(tags.includes('CT')) ct++;
+        else other++;
+        const article=document.createElement('article');
+        article.className='paper';
+        article.innerHTML=`
+          <div class="journal">${p.journal}</div>
+          <h3>${p.title}</h3>
+          <div class="meta">${p.date} · ${p.disease}</div>
+          <div class="tags">${tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+          <p><span class="label">研究问题：</span>${p.question}</p>
+          <p><span class="label">方法：</span>${p.methods}</p>
+          <p><span class="label">主要结果：</span>${p.finding}</p>`;
+        box.appendChild(article);
       });
+      document.getElementById('mri').textContent=mri;
+      document.getElementById('ct').textContent=ct;
+      document.getElementById('other').textContent=other;
+    })
+    .catch(()=>{
+      document.getElementById('month').textContent='数据加载失败';
     });
-  </script>
+</script>
 </body>
 </html>
