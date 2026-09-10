@@ -19,7 +19,7 @@
     .section{margin-top:26px}.section h2{font-size:22px}
     .papers{display:grid;grid-template-columns:1fr 1fr;gap:16px}
     .paper{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:0 8px 20px rgba(32,54,105,.04)}
-    .journal{font-size:13px;font-weight:800;color:var(--accent);margin-bottom:8px}.paper h3{margin:0 0 10px;font-size:19px;line-height:1.45}.meta{color:var(--muted);font-size:13px;margin-bottom:12px}
+    .journal{font-size:13px;font-weight:800;color:var(--accent);margin-bottom:8px}.paper h3{margin:0 0 8px;font-size:19px;line-height:1.45}.title-en{font-size:12px;color:var(--muted);line-height:1.5;margin-bottom:10px}.meta{color:var(--muted);font-size:13px;margin-bottom:12px}
     .tags{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}.tag{background:var(--soft);color:#4159b8;border-radius:999px;padding:5px 9px;font-size:12px;font-weight:700}
     .paper p{margin:8px 0;color:#46536c;font-size:14px;line-height:1.65}.label{font-weight:800;color:#26334d}.note{text-align:center;color:var(--muted);margin-top:26px;font-size:13px}
     .institution-box{margin:12px 0 14px;padding:11px 12px;border-left:3px solid var(--accent);background:#f8faff;border-radius:8px}
@@ -33,7 +33,7 @@
 <main class="wrap">
   <section class="hero">
     <div class="top">
-      <div><div class="eyebrow">Imaging Research Monthly</div><h1>月度影像学科研看板</h1><p class="subtitle">当前页面从 PubMed 数据文件读取论文。</p></div>
+      <div><div class="eyebrow">Imaging Research Monthly</div><h1>月度影像学科研看板</h1><p class="subtitle">中国机构参与的影像学原创研究 · 自动中文翻译与科研摘要</p></div>
       <div class="month" id="month">加载中...</div>
     </div>
     <div class="stats">
@@ -48,7 +48,7 @@
     <h2>最新论文</h2>
     <div class="papers" id="papers"></div>
   </section>
-  <div class="note">数据来自 PubMed。当前为功能测试版。</div>
+  <div class="note">文献信息来自 PubMed；中文题目与摘要由 AI 基于 PubMed 摘要生成，请以原文为准。</div>
 </main>
 <script>
   const institutionMap = [
@@ -75,9 +75,7 @@
     const names=[];
     (affiliations || []).forEach(aff=>{
       for(const [english, chinese] of institutionMap){
-        if(aff.toLowerCase().includes(english.toLowerCase()) && !names.includes(chinese)){
-          names.push(chinese);
-        }
+        if(aff.toLowerCase().includes(english.toLowerCase()) && !names.includes(chinese)) names.push(chinese);
       }
     });
     return names;
@@ -85,45 +83,43 @@
 
   const dataUrl = 'data/latest.json?v=' + Date.now();
   fetch(dataUrl, { cache: 'no-store' })
-    .then(r => {
-      if (!r.ok) throw new Error('HTTP ' + r.status);
-      return r.json();
-    })
+    .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
     .then(data => {
       document.getElementById('month').textContent = data.month;
       document.getElementById('total').textContent = data.papers.length;
       let mri=0, ct=0, other=0;
       const box=document.getElementById('papers');
       box.innerHTML='';
+
       data.papers.forEach(p=>{
         const tags=p.tags||[];
         if(tags.includes('MRI')) mri++;
         else if(tags.includes('CT')) ct++;
         else other++;
+
         const article=document.createElement('article');
         article.className='paper';
-
-        const institutions = getChineseInstitutions(p.china_affiliations || []);
-        const institutionBlock = institutions.length ? `
-          <div class="institution-box">
-            <div class="institution-title">中国机构</div>
-            ${institutions.map(name => `<div class="institution-item">${name}</div>`).join('')}
-          </div>` : '';
-
-        const pubmedLink = p.pubmed_url ? `<a class="pubmed" href="${p.pubmed_url}" target="_blank" rel="noopener">在 PubMed 查看 →</a>` : '';
+        const institutions=getChineseInstitutions(p.china_affiliations || []);
+        const institutionBlock=institutions.length ? `<div class="institution-box"><div class="institution-title">中国机构</div>${institutions.map(name=>`<div class="institution-item">${name}</div>`).join('')}</div>` : '';
+        const pubmedLink=p.pubmed_url ? `<a class="pubmed" href="${p.pubmed_url}" target="_blank" rel="noopener">在 PubMed 查看 →</a>` : '';
+        const displayTitle=p.title_zh || p.title || '';
+        const englishTitle=p.title_zh && p.title ? `<div class="title-en">${p.title}</div>` : '';
+        const methods=p.methods || '';
 
         article.innerHTML=`
           <div class="journal">${p.journal || ''}</div>
-          <h3>${p.title || ''}</h3>
-          <div class="meta">${p.date || ''}${p.disease ? ' · ' + p.disease : ''}${p.pmid ? ' · PMID ' + p.pmid : ''}</div>
+          <h3>${displayTitle}</h3>
+          ${englishTitle}
+          <div class="meta">${p.date || ''}${p.pmid ? ' · PMID ' + p.pmid : ''}</div>
           <div class="tags">${tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>
           ${institutionBlock}
           ${p.question ? `<p><span class="label">研究问题：</span>${p.question}</p>` : ''}
-          ${p.methods ? `<p><span class="label">方法：</span>${p.methods}</p>` : ''}
+          ${methods ? `<p><span class="label">方法：</span>${methods}</p>` : ''}
           ${p.finding ? `<p><span class="label">主要结果：</span>${p.finding}</p>` : ''}
           ${pubmedLink}`;
         box.appendChild(article);
       });
+
       document.getElementById('mri').textContent=mri;
       document.getElementById('ct').textContent=ct;
       document.getElementById('other').textContent=other;
