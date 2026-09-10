@@ -29,6 +29,14 @@ NON_ORIGINAL_TYPES = {
     "Retracted Publication",
 }
 
+# 第一版“中国机构”判断：只根据 PubMed 作者单位地址，不判断作者国籍。
+CHINA_AFFILIATION_KEYWORDS = (
+    "china",
+    "hong kong",
+    "macao",
+    "macau",
+)
+
 
 def get_json(url):
     with urllib.request.urlopen(url, timeout=30) as r:
@@ -75,6 +83,34 @@ def publication_date(record):
     return ""
 
 
+def extract_authors_and_affiliations(art):
+    authors = []
+    affiliations = []
+
+    for author in art.findall("AuthorList/Author"):
+        collective = text(author, "CollectiveName")
+        if collective:
+            authors.append(collective)
+        else:
+            last = text(author, "LastName")
+            initials = text(author, "Initials")
+            name = " ".join(x for x in [last, initials] if x)
+            if name:
+                authors.append(name)
+
+        for aff_node in author.findall("AffiliationInfo/Affiliation"):
+            aff = "".join(aff_node.itertext()).strip()
+            if aff and aff not in affiliations:
+                affiliations.append(aff)
+
+    return authors, affiliations
+
+
+def is_china_affiliation(affiliation):
+    a = affiliation.lower()
+    return any(keyword in a for keyword in CHINA_AFFILIATION_KEYWORDS)
+
+
 start_date = f"{YEAR}/{MONTH:02d}/01"
 end_date = f"{YEAR}/{MONTH:02d}/31"
 term = f'"{JOURNAL}"[jour] AND {start_date}:{end_date}[dp]'
@@ -106,7 +142,8 @@ fetch_url = (
 root = get_xml(fetch_url)
 
 papers = []
-excluded = []
+excluded_non_original = []
+excluded_non_china = []
 
 for record in root.findall(".//PubmedArticle"):
     citation = record.find("MedlineCitation")
@@ -125,9 +162,8 @@ for record in root.findall(".//PubmedArticle"):
         if "".join(node.itertext()).strip()
     ]
 
-    # 排除明确的非原创文章类型。
     if any(t in NON_ORIGINAL_TYPES for t in pub_types):
-        excluded.append({"pmid": pmid, "title": title, "reason": ", ".join(pub_types)})
+        excluded_non_original.append({"pmid": pmid, "title": title, "reason": ", ".join(pub_types)})
         continue
 
     abstract_parts = []
@@ -138,9 +174,16 @@ for record in root.findall(".//PubmedArticle"):
             abstract_parts.append(f"{label}: {content}" if label else content)
     abstract = " ".join(abstract_parts)
 
-    # 月报主要面向科研论文：没有摘要的内容先不纳入。
     if len(abstract) < 100:
-        excluded.append({"pmid": pmid, "title": title, "reason": "No substantial abstract"})
+        excluded_non_original.append({"pmid": pmid, "title": title, "reason": "No substantial abstract"})
+        continue
+
+    authors, affiliations = extract_authors_and_affiliations(art)
+    china_affiliations = [aff for aff in affiliations if is_china_affiliation(aff)]
+
+    # 只保留至少有一个中国机构作者单位的论文。
+    if not china_affiliations:
+        excluded_non_china.append({"pmid": pmid, "title": title})
         continue
 
     papers.append({
@@ -153,6 +196,8 @@ for record in root.findall(".//PubmedArticle"):
         "methods": abstract[:600],
         "finding": "",
         "pmid": pmid,
+        "authors": authors,
+        "china_affiliations": china_affiliations,
         "publication_types": pub_types,
         "pubmed_url": f"https://pubmed.ncbi.nlm.nih.gov/{pmid}/" if pmid else ""
     })
@@ -160,7 +205,7 @@ for record in root.findall(".//PubmedArticle"):
 OUT.parent.mkdir(parents=True, exist_ok=True)
 OUT.write_text(
     json.dumps({
-        "month": f"{YEAR} 年 {MONTH} 月 · {JOURNAL} · 原创研究筛选",
+        "month": f"{YEAR} 年 {MONTH} 月 · {JOURNAL} · 中国机构原创研究",
         "papers": papers
     }, ensure_ascii=False, indent=2),
     encoding="utf-8"
@@ -168,8 +213,11 @@ OUT.write_text(
 
 print(f"Search: {term}")
 print(f"PubMed records found: {len(pmids)}")
-print(f"Original-study candidates kept: {len(papers)}")
-print(f"Excluded: {len(excluded)}")
-for item in excluded:
-    print(f"EXCLUDED PMID {item['pmid']}: {item['reason']} | {item['title']}")
+print(f"Excluded as non-original/no abstract: {len(excluded_non_original)}")
+print(f"Excluded because no China affiliation: {len(excluded_non_china)}")
+print(f"China-affiliated original studies kept: {len(papers)}")
+for p in papers:
+    print(f"KEPT PMID {p['pmid']}: {p['title']}")
+    for aff in p['china_affiliations']:
+        print(f"  China affiliation: {aff}")
 print(f"Saved {len(papers)} papers to {OUT}")
