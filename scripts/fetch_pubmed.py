@@ -5,7 +5,9 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 
 JOURNAL = "Radiology"
-RETMAX = 5
+YEAR = 2026
+MONTH = 8
+RETMAX = 200
 OUT = Path("data/latest.json")
 
 
@@ -21,13 +23,46 @@ def get_xml(url):
 
 def text(el, path, default=""):
     node = el.find(path)
-    if node is None or node.text is None:
+    if node is None:
         return default
-    return "".join(node.itertext()).strip()
+    value = "".join(node.itertext()).strip()
+    return value or default
 
 
-# 1) Search PubMed for the latest papers from one journal
-term = f'"{JOURNAL}"[jour]'
+def publication_date(article):
+    # Prefer an explicit electronic/article date when PubMed provides one.
+    article_date = article.find("Article/ArticleDate")
+    if article_date is not None:
+        y = text(article_date, "Year")
+        m = text(article_date, "Month")
+        d = text(article_date, "Day")
+        if y and m and d:
+            return f"{y}-{m.zfill(2)}-{d.zfill(2)}"
+
+    pub_date = article.find("Article/Journal/JournalIssue/PubDate")
+    if pub_date is not None:
+        y = text(pub_date, "Year")
+        m = text(pub_date, "Month")
+        d = text(pub_date, "Day")
+        if y:
+            parts = [y]
+            if m:
+                parts.append(m)
+            if d:
+                parts.append(d)
+            return "-".join(parts)
+        medline_date = text(pub_date, "MedlineDate")
+        if medline_date:
+            return medline_date
+
+    return ""
+
+
+start_date = f"{YEAR}/{MONTH:02d}/01"
+end_date = f"{YEAR}/{MONTH:02d}/31"
+
+# Search one journal within one publication month.
+term = f'"{JOURNAL}"[jour] AND {start_date}:{end_date}[dp]'
 search_url = (
     "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?"
     + urllib.parse.urlencode({
@@ -42,9 +77,9 @@ search = get_json(search_url)
 pmids = search.get("esearchresult", {}).get("idlist", [])
 
 if not pmids:
-    raise SystemExit("No PubMed records found.")
+    raise SystemExit(f"No PubMed records found for {JOURNAL}, {YEAR}-{MONTH:02d}.")
 
-# 2) Fetch full records
+# Fetch full PubMed records.
 fetch_url = (
     "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?"
     + urllib.parse.urlencode({
@@ -56,18 +91,16 @@ fetch_url = (
 root = get_xml(fetch_url)
 
 papers = []
-for article in root.findall(".//PubmedArticle"):
-    citation = article.find("MedlineCitation")
+for record in root.findall(".//PubmedArticle"):
+    citation = record.find("MedlineCitation")
     art = citation.find("Article") if citation is not None else None
     if art is None:
         continue
 
     title = text(art, "ArticleTitle", "Untitled")
     journal = text(art, "Journal/Title", JOURNAL)
-    year = text(art, "Journal/JournalIssue/PubDate/Year")
-    medline_date = text(art, "Journal/JournalIssue/PubDate/MedlineDate")
-    date = year or medline_date or ""
     pmid = text(citation, "PMID")
+    date = publication_date(record)
 
     abstract_parts = []
     for node in art.findall("Abstract/AbstractText"):
@@ -93,10 +126,11 @@ for article in root.findall(".//PubmedArticle"):
 OUT.parent.mkdir(parents=True, exist_ok=True)
 OUT.write_text(
     json.dumps({
-        "month": "PubMed 最新示例",
+        "month": f"{YEAR} 年 {MONTH} 月 · {JOURNAL}",
         "papers": papers
     }, ensure_ascii=False, indent=2),
     encoding="utf-8"
 )
 
+print(f"Search: {term}")
 print(f"Saved {len(papers)} papers to {OUT}")
