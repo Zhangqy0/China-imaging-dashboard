@@ -13,8 +13,8 @@ MONTH = 8
 RETMAX = 200
 OUT = Path("data/latest.json")
 
-OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", "").strip()
-OPENAI_MODEL = os.environ.get("OPENAI_MODEL", "gpt-5.6-luna").strip() or "gpt-5.6-luna"
+DEEPSEEK_API_KEY = os.environ.get("DEEPSEEK_API_KEY", "").strip()
+DEEPSEEK_MODEL = os.environ.get("DEEPSEEK_MODEL", "deepseek-v4-flash").strip() or "deepseek-v4-flash"
 
 NON_ORIGINAL_TYPES = {
     "Editorial",
@@ -136,21 +136,8 @@ def load_summary_cache():
     return cache
 
 
-def extract_response_text(response_json):
-    direct = response_json.get("output_text")
-    if isinstance(direct, str) and direct.strip():
-        return direct.strip()
-
-    chunks = []
-    for item in response_json.get("output", []):
-        for content in item.get("content", []):
-            if content.get("type") == "output_text" and content.get("text"):
-                chunks.append(content["text"])
-    return "\n".join(chunks).strip()
-
-
 def parse_json_object(raw_text):
-    raw_text = raw_text.strip()
+    raw_text = (raw_text or "").strip()
     raw_text = re.sub(r"^```(?:json)?\s*", "", raw_text, flags=re.I)
     raw_text = re.sub(r"\s*```$", "", raw_text)
     try:
@@ -162,10 +149,10 @@ def parse_json_object(raw_text):
         return json.loads(match.group(0))
 
 
-def ai_chinese_summary(title, abstract):
-    prompt = f"""你是一名医学影像学科研文献编辑。请严格依据下面的英文论文题目和PubMed摘要，生成中文科研月报内容。不得补充摘要中没有的信息，不得臆测结果。
+def deepseek_chinese_summary(title, abstract):
+    system_prompt = """你是一名医学影像学科研文献编辑。请严格依据用户提供的英文论文题目和PubMed摘要生成中文科研月报内容。不得补充摘要中没有的信息，不得臆测结果。必须输出合法JSON。"""
 
-请只输出一个合法JSON对象，不要使用Markdown，不要输出任何解释。字段必须严格为：
+    user_prompt = f"""请输出以下JSON结构：
 {{
   "title_zh": "专业、忠实、自然的中文论文题目",
   "question": "用1句话概括研究问题",
@@ -181,16 +168,21 @@ PubMed摘要：
 """
 
     payload = {
-        "model": OPENAI_MODEL,
-        "input": prompt,
-        "max_output_tokens": 900,
+        "model": DEEPSEEK_MODEL,
+        "messages": [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": user_prompt},
+        ],
+        "thinking": {"type": "disabled"},
+        "response_format": {"type": "json_object"},
+        "max_tokens": 900,
     }
 
     req = urllib.request.Request(
-        "https://api.openai.com/v1/responses",
+        "https://api.deepseek.com/chat/completions",
         data=json.dumps(payload, ensure_ascii=False).encode("utf-8"),
         headers={
-            "Authorization": f"Bearer {OPENAI_API_KEY}",
+            "Authorization": f"Bearer {DEEPSEEK_API_KEY}",
             "Content-Type": "application/json",
         },
         method="POST",
@@ -199,7 +191,8 @@ PubMed摘要：
     with urllib.request.urlopen(req, timeout=90) as r:
         response_json = json.loads(r.read().decode("utf-8"))
 
-    result = parse_json_object(extract_response_text(response_json))
+    raw = response_json["choices"][0]["message"]["content"]
+    result = parse_json_object(raw)
     return {
         "title_zh": str(result.get("title_zh", "")).strip(),
         "question": str(result.get("question", "")).strip(),
@@ -243,8 +236,8 @@ papers = []
 excluded_non_original = []
 excluded_non_china = []
 
-print(f"AI Chinese summaries enabled: {'yes' if OPENAI_API_KEY else 'no'}")
-print(f"AI model: {OPENAI_MODEL}")
+print(f"DeepSeek Chinese summaries enabled: {'yes' if DEEPSEEK_API_KEY else 'no'}")
+print(f"DeepSeek model: {DEEPSEEK_MODEL}")
 
 for record in root.findall(".//PubmedArticle"):
     citation = record.find("MedlineCitation")
@@ -294,13 +287,13 @@ for record in root.findall(".//PubmedArticle"):
 
     if pmid in summary_cache:
         print(f"Using cached Chinese summary for PMID {pmid}")
-    elif OPENAI_API_KEY:
+    elif DEEPSEEK_API_KEY:
         try:
-            print(f"AI summarizing PMID {pmid}...")
-            summary = ai_chinese_summary(title, abstract)
+            print(f"DeepSeek summarizing PMID {pmid}...")
+            summary = deepseek_chinese_summary(title, abstract)
             time.sleep(0.2)
         except Exception as e:
-            print(f"WARNING: AI summary failed for PMID {pmid}: {type(e).__name__}: {e}")
+            print(f"WARNING: DeepSeek summary failed for PMID {pmid}: {type(e).__name__}: {e}")
 
     papers.append({
         "journal": journal,
@@ -324,8 +317,9 @@ OUT.parent.mkdir(parents=True, exist_ok=True)
 OUT.write_text(
     json.dumps({
         "month": f"{YEAR} 年 {MONTH} 月 · {JOURNAL} · 中国机构原创研究",
-        "ai_summary": bool(OPENAI_API_KEY),
-        "ai_model": OPENAI_MODEL if OPENAI_API_KEY else "",
+        "ai_summary": bool(DEEPSEEK_API_KEY),
+        "ai_provider": "DeepSeek" if DEEPSEEK_API_KEY else "",
+        "ai_model": DEEPSEEK_MODEL if DEEPSEEK_API_KEY else "",
         "papers": papers
     }, ensure_ascii=False, indent=2),
     encoding="utf-8"
