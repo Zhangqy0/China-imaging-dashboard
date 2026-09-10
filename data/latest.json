@@ -1,5 +1,5 @@
 {
-  "month": "2026 年 8 月 · Radiology · 原创研究筛选",
+  "month": "2026 年 8 月 · Radiology · 中国机构原创研究",
   "papers": [
     {
       "journal": "Radiology",
@@ -11,55 +11,36 @@
       "methods": "Background The widespread adoption of low-dose CT has increased the detection of small pure ground-glass nodules (pGGNs). The management of this type of nodule currently remains a clinical challenge. Purpose To characterize long-term growth trajectories of incidental small pGGNs, identify risk factors for nodule growth and progression, and assess the reproducibility of these findings in an independent cohort. Materials and Methods This retrospective study included patients with incidental small pGGNs (<10 mm) detected with low-dose chest CT during routine wellness assessments at Taizhou Hospit",
       "finding": "",
       "pmid": "42640190",
+      "authors": [
+        "Liu H",
+        "Fu X",
+        "Ye M",
+        "Wang Z",
+        "Hu B",
+        "Wu S",
+        "Sun C",
+        "Sheng P",
+        "Chen Z",
+        "Sun H",
+        "Cho WC",
+        "Witharana P",
+        "Ma D",
+        "Shen J"
+      ],
+      "china_affiliations": [
+        "Department of Thoracic Surgery, Taizhou Hospital of Zhejiang Province Affiliated to Wenzhou Medical University, 150 Ximen St, Linhai 317000, Zhejiang Province, China.",
+        "Dalian Medical University, Dalian, China.",
+        "Department of Thoracic Surgery, Enze Hospital, Taizhou Enze Medical Center, Linhai, China.",
+        "Department of Radiology, Taizhou Hospital of Zhejiang Province Affiliated to Wenzhou Medical University, Linhai, China.",
+        "Department of Thoracic Surgery, National Cancer Center/National Clinical Research Center for Cancer/Cancer Hospital, Chinese Academy of Medical Sciences and Peking Union Medical College, Beijing, China.",
+        "Department of Cardiothoracic Surgery, Jingjiang People's Hospital Affiliated to Yangzhou Medical University, Jingjiang, China.",
+        "Department of Cardiothoracic Surgery, The Second Affiliated Hospital, Jiaxing University, Jiaxing, China.",
+        "Department of Clinical Oncology, Queen Elizabeth Hospital, Hong Kong, China."
+      ],
       "publication_types": [
         "Journal Article"
       ],
       "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/42640190/"
-    },
-    {
-      "journal": "Radiology",
-      "title": "Shear-Wave Elastography, Superb Microvascular Imaging, and B-mode US for Diagnostic Accuracy in Soft Tissue Tumors.",
-      "date": "2026-Aug",
-      "disease": "",
-      "tags": [],
-      "question": "",
-      "methods": "Background Differentiating benign from malignant soft tissue tumors (STTs) remains challenging, and conventional US alone is often insufficient. This study evaluated whether elastography and microvascular imaging improve diagnostic accuracy. Purpose To assess the ability of US techniques-B-mode US, shear-wave elastography (SWE), and superb microvascular imaging (SMI)-to discriminate benign from nonbenign STTs. Materials and Methods This tertiary referral center retrospective diagnostic accuracy study included consecutive patients with STTs referred for biopsy between February 2022 and July 202",
-      "finding": "",
-      "pmid": "42640188",
-      "publication_types": [
-        "Journal Article"
-      ],
-      "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/42640188/"
-    },
-    {
-      "journal": "Radiology",
-      "title": "Insights into Radiology Malpractice Cases in the United States from the National Practitioner Data Bank.",
-      "date": "2026-Aug",
-      "disease": "",
-      "tags": [],
-      "question": "",
-      "methods": "Background Radiologists face substantial malpractice risk. Prior studies based on surveys or legal databases may not reflect national trends. National-scale analyses using objective data remain limited. Purpose To compare radiology malpractice claims with those from other specialties, identify predictors of higher indemnity payments, and assess temporal and regional litigation trends using the National Practitioner Data Bank. Materials and Methods This retrospective study analyzed all physician malpractice payments in the National Practitioner Data Bank from September 1990 to December 2024. Ra",
-      "finding": "",
-      "pmid": "42640185",
-      "publication_types": [
-        "Journal Article"
-      ],
-      "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/42640185/"
-    },
-    {
-      "journal": "Radiology",
-      "title": "Diagnostically Calibrated AI Image Quality Framework Applied to Prostate Cancer Detection at MRI.",
-      "date": "2026-Aug",
-      "disease": "",
-      "tags": [],
-      "question": "",
-      "methods": "Background Image quality affects diagnostic performance; however, current quality metrics rely on subjective reader labels rather than diagnostic outcomes. Purpose To develop and evaluate a diagnostically calibrated artificial intelligence (AI) framework using deep learning (DL) for image quality assessment, linking prostate MRI quality scores to diagnostic performance. Materials and Methods This single-center retrospective study analyzed 12 496 consecutive prostate multiparametric MRI examinations performed between January 2014 and December 2023 at Radboud University Medical Center. A two-ste",
-      "finding": "",
-      "pmid": "42610819",
-      "publication_types": [
-        "Journal Article"
-      ],
-      "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/42610819/"
     },
     {
       "journal": "Radiology",
@@ -71,43 +52,30 @@
       "methods": "Background Programmed death ligand 1 (PD-L1) expression assessed via immunohistochemical analysis of single-site biopsies is standard for guiding immunotherapy in non-small cell lung cancer (NSCLC). However, this approach fails to capture intra- and intertumoral heterogeneity. Purpose To investigate whether gallium 68 (68Ga) NK224 PET/CT enables whole-body assessment of PD-L1 expression and heterogeneity in NSCLC and whether lesion-specific treatment response is associated with PET-defined PD-L1 uptake. Materials and Methods In this prospective study conducted from December 2023 to July 2025, ",
       "finding": "",
       "pmid": "42610817",
+      "authors": [
+        "Zhao L",
+        "Zhou H",
+        "Yu L",
+        "Ruan D",
+        "Wu Z",
+        "Li Y",
+        "Dai Y",
+        "Li J",
+        "Sun L",
+        "Wu H",
+        "Mi Y",
+        "Chen H"
+      ],
+      "china_affiliations": [
+        "Department of Nuclear Medicine and Minnan PET Center, Xiamen Key Laboratory of Radiopharmaceuticals, The First Affiliated Hospital of Xiamen University, School of Medicine, Xiamen University, 55 Zhenhai Rd, Xiamen 361003, China.",
+        "Clinical Oncology School of Fujian Medical University, Fujian Cancer Hospital, Fuzhou, China.",
+        "Department of Medical Oncology, The First Affiliated Hospital of Xiamen University, School of Medicine, Xiamen University, Xiamen, China."
+      ],
       "publication_types": [
         "Journal Article",
         "Observational Study"
       ],
       "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/42610817/"
-    },
-    {
-      "journal": "Radiology",
-      "title": "Multinational Validation of a Radiography-Based AI Tool for Appendicular Fracture Detection and Corresponding Reader Performance.",
-      "date": "2026-Aug",
-      "disease": "",
-      "tags": [],
-      "question": "",
-      "methods": "Background Artificial intelligence (AI) models for fracture detection have shown promise in improving diagnostic efficiency and accuracy in radiology workflows. However, despite potential differences in imaging protocols and clinical workflows in different health care systems and settings, the performance across countries of these models and their effects on reader performance remain underexplored. Purpose To evaluate the performance of a pretrained fracture detection tool across three European hospitals and assess its impact on clinician performance. Materials and Methods In this retrospectiv",
-      "finding": "",
-      "pmid": "42610815",
-      "publication_types": [
-        "Journal Article",
-        "Multicenter Study",
-        "Validation Study"
-      ],
-      "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/42610815/"
-    },
-    {
-      "journal": "Radiology",
-      "title": "MRI Metabolic Biomarkers Predict Ischemic Lesion Survival in Hyperacute Stroke: New Insight on Diffusion Reversibility.",
-      "date": "2026-Aug",
-      "disease": "",
-      "tags": [],
-      "question": "",
-      "methods": "Background In patients with acute ischemic stroke (AIS), ischemic core volume overestimation at diffusion-weighted MRI due to diffusion reversal has been described following successful reperfusion. Purpose To assess the potential role of the oxygen extraction fraction (OEF), derived from baseline dynamic susceptibility contrast (DSC) MRI, in diffusion reversal prediction in patients with AIS after successful reperfusion. Materials and Methods This retrospective study (January 2015 to December 2020) included patients with anterior-circulation large-vessel occlusion stroke who underwent pretreat",
-      "finding": "",
-      "pmid": "42610810",
-      "publication_types": [
-        "Journal Article"
-      ],
-      "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/42610810/"
     },
     {
       "journal": "Radiology",
@@ -119,26 +87,32 @@
       "methods": "Background Radiomics may preoperatively identify high-grade patterns (HGPs) in lung adenocarcinoma (ADC) and assist in clinical decision-making. Purpose To develop and evaluate a machine learning model based on preoperative contrast-enhanced CT images to predict HGPs and explore the model's prognostic value. Materials and Methods Patients with clinical stage I invasive ADC who underwent surgery (January 2017 to May 2025) were retrospectively enrolled from three centers. Binary (low risk: HGPs < 20%; high risk: HGPs ≥ 20%) and ternary (HGP0: HGPs = 0; HGP1: 0 < HGPs < 20%; HGP2: HGPs ≥ 20%) cla",
       "finding": "",
       "pmid": "42578790",
+      "authors": [
+        "E J",
+        "Kang L",
+        "Liu F",
+        "Wang D",
+        "Yang J",
+        "Lu X",
+        "Huang Y",
+        "Li J",
+        "Zhang Y",
+        "Wang Q",
+        "Cai X",
+        "Gao B",
+        "Ning Z",
+        "Liu Y"
+      ],
+      "china_affiliations": [
+        "Department of Radiology, Tianjin Medical University Cancer Institute and Hospital, National Clinical Research Center for Cancer/Tianjin's Clinical Research Center for Cancer/Key Laboratory of Cancer Prevention and Therapy, Huanhuxi Rd, Tiyuanbei, Hexi District, Tianjin 300060, China.",
+        "Department of Radiology, The Affiliated Cancer Hospital of Zhengzhou University & Henan Cancer Hospital, HNHC Key Laboratory of Oncology Medical Imaging Response Assessment, Zhengzhou, China.",
+        "Department of Radiology, Shandong Cancer Hospital and Institute, Shandong First Medical University and Shandong Academy of Medical Sciences, Jinan, China."
+      ],
       "publication_types": [
         "Journal Article",
         "Multicenter Study"
       ],
       "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/42578790/"
-    },
-    {
-      "journal": "Radiology",
-      "title": "T2 Mapping MRI for Differentiation of Hemarthrosis and Nonhemorrhagic Joint Effusion in Patients with Hemophilia.",
-      "date": "2026-Aug",
-      "disease": "",
-      "tags": [],
-      "question": "",
-      "methods": "Background Differentiating acute hemarthrosis from nonhemorrhagic effusion in patients with hemophilia is clinically challenging and may require invasive joint aspiration. Purpose To determine whether T1 or T2 mapping MRI at 3 T can noninvasively differentiate acute hemarthrosis from nonhemorrhagic joint effusion in patients with hemophilia. Materials and Methods In this prospective study, ex vivo validation was first performed using blood dilution series from three control participants to determine blood detection limits and 14-day stability for T1 and T2 mapping at 3 T. Consecutive patients ",
-      "finding": "",
-      "pmid": "42578788",
-      "publication_types": [
-        "Journal Article"
-      ],
-      "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/42578788/"
     },
     {
       "journal": "Radiology",
@@ -150,26 +124,30 @@
       "methods": "Background Suboptimal nodal assessment in rectal cancer hampers pre- and postoperative assessment for treatment planning. A recently proposed standardized nodal evaluation system, Node Reporting and Data System 1.0 (Node-RADS), lacks robust evidence of diagnostic utility. Purpose To validate and optimize Node-RADS against European Society of Gastrointestinal and Abdominal Radiology (ESGAR) criteria in MRI-based nodal assessment in patients with rectal cancer, with subsequent patient-level external validation. Materials and Methods This retrospective study included consecutive patients with rec",
       "finding": "",
       "pmid": "42578786",
+      "authors": [
+        "Li QY",
+        "Guo YZ",
+        "Wu JQ",
+        "Chang TJ",
+        "Wang Z",
+        "Li XT",
+        "Sun RJ",
+        "Lu QY",
+        "Guan Z",
+        "Yan XY",
+        "Zhang XY",
+        "Sun YS"
+      ],
+      "china_affiliations": [
+        "Key Laboratory of Carcinogenesis and Translational Research (Ministry of Education, Beijing), Department of Radiology, Peking University Cancer Hospital and Institute, No. 52 Fu Cheng Rd, Hai Dian District, Beijing 100142, China.",
+        "Department of Radiology, Shougang Hospital, Peking University, Beijing, China.",
+        "Department of Medical Imaging Center, Guangxi Medical University Cancer Hospital, Nanning, China."
+      ],
       "publication_types": [
         "Journal Article",
         "Comparative Study"
       ],
       "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/42578786/"
-    },
-    {
-      "journal": "Radiology",
-      "title": "Determinants of Reader-LLM Interaction in Thoracic Radiology: Impact of Model Confidence and Reader Expertise.",
-      "date": "2026-Aug",
-      "disease": "",
-      "tags": [],
-      "question": "",
-      "methods": "Background Large language models (LLMs) provide diagnostic suggestions and rationales, but determinants of successful reader-LLM interaction remain unclear. Purpose To determine how LLM attributes and reader expertise independently and jointly influence the selective integration of diagnostic advice in human-LLM collaboration. Materials and Methods In this retrospective study, 10 readers evaluated 100 chest imaging cases (radiography, CT, MRI, or PET) from the Korean Society of Thoracic Radiology Weekly Case platform (January 2018 to December 2020), unaided (session 1) and randomized to LLM-as",
-      "finding": "",
-      "pmid": "42578783",
-      "publication_types": [
-        "Journal Article"
-      ],
-      "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/42578783/"
     },
     {
       "journal": "Radiology",
@@ -181,75 +159,40 @@
       "methods": "Background Photon-counting CT (PCCT) can theoretically be used to quantify extracellular volume fraction (ECV) for liver fibrosis assessment, but its performance remains unclear. Purpose To determine the feasibility of PCCT-derived ECV for staging liver fibrosis by assessing its correlation with MR elastography-derived liver stiffness measurement (LSM) and comparing their diagnostic performance, using histopathologic findings as the reference standard. Materials and Methods Between July 2024 and July 2025, 157 participants with suspected hepatic malignancies were prospectively enrolled and und",
       "finding": "",
       "pmid": "42550028",
+      "authors": [
+        "Wu X",
+        "Li J",
+        "Deng R",
+        "Xu X",
+        "Zhou J",
+        "Chong H",
+        "Li W",
+        "Wu P",
+        "Chen Y",
+        "Yang Y",
+        "Chang R",
+        "Dong H",
+        "Li R",
+        "Sack I",
+        "Guo J",
+        "Xu Z",
+        "Schmidt B",
+        "Borhani AA",
+        "Yan F",
+        "Lin H"
+      ],
+      "china_affiliations": [
+        "Department of Radiology, Ruijin Hospital, Shanghai Jiao Tong University School of Medicine, No. 197 Ruijin 2nd Rd, Huangpu District, Shanghai 200025, China.",
+        "Faculty of Medical Imaging Technology, College of Health Science and Technology, Shanghai Jiao Tong University School of Medicine, Shanghai, China.",
+        "Philips Healthcare, Shanghai, China.",
+        "Department of General Surgery, Ruijin Hospital, Shanghai Jiao Tong University School of Medicine, Shanghai, China.",
+        "CT Collaboration, Siemens Healthineers, Shanghai, China."
+      ],
       "publication_types": [
         "Journal Article",
         "Validation Study"
       ],
       "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/42550028/"
-    },
-    {
-      "journal": "Radiology",
-      "title": "Comparison of Second-line Hepatic Arterial Infusion Chemotherapy and Tyrosine Kinase Inhibitors in Advanced Hepatocellular Carcinoma.",
-      "date": "2026-Aug",
-      "disease": "",
-      "tags": [],
-      "question": "",
-      "methods": "Background With the advent of immune checkpoint inhibitor-based combination therapy, treatment sequencing for advanced hepatocellular carcinoma (HCC) has become increasingly complex. The Barcelona Clinic Liver Cancer (BCLC) 2026 recommendations emphasize individualized decision-making. Purpose To compare clinical outcomes of hepatic arterial infusion chemotherapy (HAIC) and tyrosine kinase inhibitors (TKIs) in patients with advanced HCC after atezolizumab-bevacizumab (AB) failure, within the BCLC 2026 treatment paradigm. Materials and Methods This multicenter retrospective study included patie",
-      "finding": "",
-      "pmid": "42550027",
-      "publication_types": [
-        "Journal Article",
-        "Comparative Study",
-        "Multicenter Study"
-      ],
-      "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/42550027/"
-    },
-    {
-      "journal": "Radiology",
-      "title": "Radiologically Relevant Clinical History Summarization with Large Language Models: A Multireader Performance Study.",
-      "date": "2026-Aug",
-      "disease": "",
-      "tags": [],
-      "question": "",
-      "methods": "Background Clinical histories accompanying imaging orders guide protocol selection and diagnostic focus. However, they are often incomplete, potentially compromising diagnostic accuracy and workflow efficiency. Purpose To evaluate whether large language models (LLMs) can improve the clinical utility of provided imaging indications by leveraging clinical notes. Materials and Methods This retrospective study curated a dataset from deidentified electronic health records at the University of California San Francisco (January 2012 to August 2024), consisting of radiology reports with paired referri",
-      "finding": "",
-      "pmid": "42550025",
-      "publication_types": [
-        "Journal Article"
-      ],
-      "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/42550025/"
-    },
-    {
-      "journal": "Radiology",
-      "title": "Associations of Popliteal Artery Wall Morphology at MRI and Knee Osteoarthritis in the Osteoarthritis Initiative.",
-      "date": "2026-Aug",
-      "disease": "",
-      "tags": [],
-      "question": "",
-      "methods": "Background Vascular factors have been associated with osteoarthritis (OA), but the association between popliteal artery wall morphology and symptomatic and radiographic knee OA outcomes over time remains unclear. Purpose To evaluate the associations between MRI-derived measures of popliteal artery wall morphology (localized wall thickening and global wall burden) and symptomatic and radiographic knee OA outcomes. Materials and Methods In this secondary analysis of the Osteoarthritis Initiative (February 2004 to October 2015), baseline knee MRI scans were analyzed to quantify maximum wall thick",
-      "finding": "",
-      "pmid": "42550019",
-      "publication_types": [
-        "Journal Article",
-        "Multicenter Study",
-        "Observational Study"
-      ],
-      "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/42550019/"
-    },
-    {
-      "journal": "Radiology",
-      "title": "DBT-DINO: Toward Foundation Model-Based Analysis of Digital Breast Tomosynthesis.",
-      "date": "2026-Aug",
-      "disease": "",
-      "tags": [],
-      "question": "",
-      "methods": "Background Foundation models show promise in medical imaging but remain underexplored in three-dimensional modalities. Despite the adoption of digital breast tomosynthesis (DBT) in breast cancer screening, no dedicated foundation model currently exists for this modality. Purpose To develop and evaluate a foundation model for DBT (DBT-DINO) and assess the impact of domain-specific pretraining across multiple clinical tasks. Materials and Methods This retrospective study used DBT images from Mass General Brigham acquired between March 2011 and February 2024. Self-supervised pretraining was perfo",
-      "finding": "",
-      "pmid": "42550018",
-      "publication_types": [
-        "Journal Article"
-      ],
-      "pubmed_url": "https://pubmed.ncbi.nlm.nih.gov/42550018/"
     }
   ]
 }
